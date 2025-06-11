@@ -1,0 +1,60 @@
+.svg-element {
+	font-family: 'Courier New', Courier, monospace;
+	font-size: 16px;
+	fill: black;
+	font-weight: bold;
+	dominant-baseline: middle;
+	text-anchor: middle;
+}
+
+.svg-element-charge-border {
+	stroke: black;
+	stroke-width: 0.3px;
+	fill: white;
+	r: 2.5px;
+}
+
+.svg-element-charge {
+	font-family: 'Courier New', Courier, monospace;
+	font-size: 3px;
+	fill: black;
+	dominant-baseline: central;
+	text-anchor: middle;
+}
+
+.svg-ligation {
+	stroke-width: 1px;
+	stroke: black;
+}
+
+.svg-element-H {
+	fill: #727272;
+}
+
+.svg-element-S {
+	fill: #f7cd29;
+}
+
+.svg-element-Na {
+	fill: #f7d653;
+}
+
+.svg-element-Cl {
+	fill: #21d122;
+}
+
+.svg-element-F {
+	fill: #aed482;
+}
+
+.svg-element-N {
+	fill: #7878fa;
+}
+
+.svg-element-O {
+	fill: #eb3738;
+}
+
+.svg-element-C {
+	fill: #000000;
+}
