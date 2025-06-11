@@ -85,3 +85,10 @@ function Plugin:drawLigation()
 
     return nil
 end
+
+function Plugin:build()
+    self:calculate_bounds()
+    self:drawAtom()
+    self:drawLigation()
+    return self.svg:build()
+end
