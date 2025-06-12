@@ -1,8 +1,11 @@
-require "Configuration"
-require "helpers.Functions"
+local uuid = require "uuid"
+uuid.set_rng(uuid.rng.urandom())
 
-require "types.Atom"
-require "types.Ligation"
+require "zuna.Configuration"
+require "zuna.helpers.Functions"
+
+require "zuna.types.Atom"
+require "zuna.types.Ligation"
 
 ---Handle line [@name ...]
 ---@param block Block
@@ -18,8 +21,10 @@ end
 ---@param line string
 function HandleTag(block, line)
     local tag = Match_remove_substr(line, "@tag%s")
-    table.insert(block.tags, tag)
-    Log("+ tag: " .. tag)
+    if tag then
+        block.tags[tag] = true
+        Log("+ tag: " .. tag)
+    end
 end
 
 ---Handle line [@p pattern 1,2,3,...]
@@ -101,10 +106,10 @@ function HandleAtom(block, line)
 
         if not block.ligations[ligation_key].from then
             block.ligations[ligation_key].from = atom
-            -- atom:add_ligation(self.ligations[ligation_key])
+            atom:add_ligation(block.ligations[ligation_key])
         else
             block.ligations[ligation_key].to = atom
-            -- atom:set_parent(self.ligations[ligation_key])
+            atom:set_parent(block.ligations[ligation_key])
         end
 
         ligation_key = my_Split_string()
@@ -119,7 +124,7 @@ end
 function HandleLigation(block, line)
     local ligation_params = Split_string(line)
 
-    local name = nil
+    local ligation_tag = nil
 
     local eletrons = '-'
     local angle = nil
@@ -160,7 +165,7 @@ function HandleLigation(block, line)
             goto continue
         end
 
-        name = a
+        ligation_tag = a
 
         ::continue::
     end
@@ -182,16 +187,23 @@ function HandleLigation(block, line)
     type = types[type]
 
     Log("+ lig: " ..
-        name ..
-        " " ..
-        eletrons .. " " .. type .. " " .. angle .. " [" .. (angle_azimutal or "n") .. " " .. (angle_polar or "n") .. "]")
-    local ligation = Ligation:new(type, eletrons, angle, { angle_azimutal, angle_polar })
-    block.ligations[name] = ligation
+    ligation_tag ..
+    " " ..
+    eletrons .. " " .. type .. " " .. (angle or 'nil°') .. " [" .. (angle_azimutal or "n°") .. " " .. (angle_polar or "n°") .. "]")
+
+    if not block.ligations[ligation_tag] then
+        block.ligations[ligation_tag] = Ligation:new(type, eletrons, angle, { angle_azimutal, angle_polar })
+    else
+        if type then block.ligations[ligation_tag].type = type end
+        if eletrons then block.ligations[ligation_tag].eletrons = eletrons end
+        if angle then block.ligations[ligation_tag].angle = angle end
+        if angle_azimutal and angle_polar then block.ligations[ligation_tag].angle3d = { angle_azimutal, angle_polar } end
+    end
 end
 
 ---@class Block
 ---@field names string[]
----@field tags string[]
+---@field tags {[string]: boolean}
 ---@field atoms Atom[]
 ---@field ligations Ligation[]
 Block = {
@@ -200,7 +212,8 @@ Block = {
         { "@tag%s(.+)",                     HandleTag },
         { "@p%s(.+)",                       HandlePattern },
         { "[A-Z][a-z]?%s[+|-0-9]?[%s%d+]*", HandleAtom },
-        { "[^@%a+](%s%d+°)",                HandleLigation }
+        { "[^@%a+](%s%d+°)",                HandleLigation },
+        { "[^@%a+](%s[-=%%])",                HandleLigation }
     }
 }
 
@@ -237,19 +250,46 @@ function Block:merge(newBlock, mask)
         table.insert(self.names, newBlock.names[i])
     end
 
-    local tags = {}
-    for _, tag in ipairs(newBlock.tags) do table.insert(tags, tag) end
-    for _, tag in ipairs(self.tags) do table.insert(tags, tag) end
-    self.tags = tags
+    for i = 1, #newBlock.tags do
+        table.insert(self.tags, newBlock.tags[i])
+    end
 
-    local atoms = {}
-    for _, atom in ipairs(newBlock.atoms) do table.insert(atoms, atom) end
-    for _, atom in ipairs(self.atoms) do table.insert(atoms, atom) end
-    self.atoms = atoms
+    for i = 1, #newBlock.atoms do
+        table.insert(self.atoms, newBlock.atoms[i])
+    end
 
     for _, ligation_mask in ipairs(mask) do
-        local in_mask = ligation_mask[1]
-        local out_mask = ligation_mask[2]
-        self.ligations[in_mask] = newBlock.ligations[out_mask]
+        local out_mask = ligation_mask[1]
+        local in_mask = ligation_mask[2]
+
+        if self.ligations[in_mask] == nil then
+            self.ligations[in_mask] = newBlock.ligations[out_mask]
+        else
+            if newBlock.ligations[out_mask].from ~= nil then
+                self.ligations[in_mask].from = newBlock.ligations[out_mask].from
+            end
+
+            if newBlock.ligations[out_mask].to ~= nil then
+                self.ligations[in_mask].from = newBlock.ligations[out_mask].to
+            end
+
+            self.ligations[in_mask].angle = newBlock.ligations[out_mask].angle
+            self.ligations[in_mask].type = newBlock.ligations[out_mask].type
+            self.ligations[in_mask].eletrons = newBlock.ligations[out_mask].eletrons
+            self.ligations[in_mask].angle3d = newBlock.ligations[out_mask].angle3d
+        end
+    end
+
+    for key, ligation in pairs(newBlock.ligations) do
+        for _, ligation_mask in ipairs(mask) do
+            if ligation_mask[1] == key then
+                goto continue
+            end
+        end
+
+        local id = uuid.v4()
+        self.ligations[id] = ligation
+
+        ::continue::
     end
 end

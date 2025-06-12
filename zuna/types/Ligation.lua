@@ -1,4 +1,4 @@
-require "types.Atom"
+require "zuna.types.Atom"
 
 ---@alias LigationType "covalente" | "iônica" | "hidrogênio" | "covalente dativa"
 

@@ -1,8 +1,8 @@
 require "os"
 require "io"
 
-require "helpers.Functions"
-require "Block"
+require "zuna.helpers.Functions"
+require "zuna.Block"
 
 ---@type string
 local file_name = arg[1]
@@ -19,18 +19,20 @@ end
 
 file:close()
 
-local plugin_name = arg[2]
+local plugin_name = arg[2] or "standard"
 local text = nil
 
 if plugin_name == "standard" then
-    require "plugins.standard"
+    require "zuna.plugins.standard"
     local plugin = Plugin:new(block)
     text = plugin:build()
 end
 
 if text == nil then
-    Handle_error(404, "plugin "..plugin_name.." not found")
+    HandleError(404, "plugin "..plugin_name.." not found")
     os.exit(1)
 end
 
-print(text)
+local out_file = io.open("out.svg", "w")
+out_file:write(text)
+out_file:close()

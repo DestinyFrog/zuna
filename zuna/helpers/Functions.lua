@@ -1,4 +1,4 @@
-require "Configuration"
+require "zuna.Configuration"
 
 ---Handle Zuna Erros
 ---@param status number

@@ -5,6 +5,7 @@
 ---@field ligations Ligation[]
 ---@field parent Atom?
 ---@field parent_ligation Ligation?
+---@field ligation_num number
 Atom = {}
 
 ---Constructs a atom object
@@ -22,4 +23,17 @@ function Atom:new(symbol, charge)
     setmetatable(obj, self)
     self.__index = self
     return obj
+end
+
+---add parent to atom
+---@param parent_ligation Ligation
+function Atom:set_parent(parent_ligation)
+    self.parent = parent_ligation.from
+    self.parent_ligation = parent_ligation
+    self.ligation_num = self.ligation_num + 1
+end
+
+function Atom:add_ligation(ligation)
+    table.insert(self.ligations, ligation)
+    self.ligation_num = self.ligation_num + 1
 end
