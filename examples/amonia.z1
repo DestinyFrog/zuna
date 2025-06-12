@@ -1,0 +1,8 @@
+@name amônia
+
+N 1 2 3
+H 1
+H 2
+H 3
+
+@p piramidal 1,2,3
