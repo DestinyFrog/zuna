@@ -47,6 +47,15 @@ function Match_remove_substr(text, remove)
     return value, end_s
 end
 
+local random = math.random
+function Generate_random_str()
+    local template ='xxxxxxxx'
+    return string.gsub(template, '[xy]', function (c)
+        local v = (c == 'x') and random(0, 0xf) or random(8, 0xb)
+        return string.format('%x', v)
+    end)
+end
+
 Atom = {}
 
 function Atom:new(symbol, charge)
@@ -351,7 +360,7 @@ function Block:merge(newBlock, mask)
             end
         end
 
-        local id = os.date("%x")
+        local id = Generate_random_str()
         self.ligations[id] = ligation
 
         ::continue::

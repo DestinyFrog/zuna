@@ -284,7 +284,7 @@ function Block:merge(newBlock, mask)
             end
         end
 
-        local id = os.date("%x")
+        local id = Generate_random_str()
         self.ligations[id] = ligation
 
         ::continue::

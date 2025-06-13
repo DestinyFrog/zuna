@@ -51,3 +51,12 @@ function Match_remove_substr(text, remove)
     local value, end_s = text:gsub(remove, "")
     return value, end_s
 end
+
+local random = math.random
+function Generate_random_str()
+    local template ='xxxxxxxx'
+    return string.gsub(template, '[xy]', function (c)
+        local v = (c == 'x') and random(0, 0xf) or random(8, 0xb)
+        return string.format('%x', v)
+    end)
+end
