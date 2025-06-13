@@ -13,7 +13,7 @@ STANDARD_LIGATION_SIZE = 30
 STANDARD_WAVES = {
     { 0 },
     { STANDARD_DISTANCE_BETWEEN_LIGATIONS / 2, -STANDARD_DISTANCE_BETWEEN_LIGATIONS / 2 },
-    { STANDARD_DISTANCE_BETWEEN_LIGATIONS,     0,                                       -STANDARD_DISTANCE_BETWEEN_LIGATIONS }
+    { STANDARD_DISTANCE_BETWEEN_LIGATIONS, 0, -STANDARD_DISTANCE_BETWEEN_LIGATIONS }
 }
 
 SVG_BORDER = 10
@@ -49,8 +49,8 @@ end
 
 local random = math.random
 function Generate_random_str()
-    local template ='xxxxxxxx'
-    return string.gsub(template, '[xy]', function (c)
+    local template = 'xxxxxxxx'
+    return string.gsub(template, '[xy]', function(c)
         local v = (c == 'x') and random(0, 0xf) or random(8, 0xb)
         return string.format('%x', v)
     end)

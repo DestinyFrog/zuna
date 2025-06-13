@@ -45,7 +45,7 @@ local str_another_names = '[' .. table.concat(another_names, ',') .. ']'
 sql = sql .. "('"
     .. uid .. "','"
     .. name .. "','"
-    .. z1 .. "','"
+    .. z1:gsub('\n\n','\n') .. "','"
     .. str_term .. "','"
     .. str_another_names .. "')"
 

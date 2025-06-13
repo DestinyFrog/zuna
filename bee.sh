@@ -4,6 +4,7 @@ if [[ $1 = "help" ]]; then
     echo "./bee.sh build        - Build the 'pack.lua' file to run as service";
     echo "./bee.sh dev          - Run as developer content in 'example.z1'";
     echo "./bee.sh database     - Setup database";
+    exit 0;
 fi
 
 if [[ $1 = "build" ]]; then
@@ -14,12 +15,20 @@ if [[ $1 = "dev" ]]; then
     while true; do
         clear;
         lua zuna/print.lua example.z1;
-        sleep 0.5;
+        sleep 1;
     done
 fi
 
 if [[ $1 = "database" ]]; then
-    rm zuna.db;
+    if ! command -v sqlite3 >/dev/null 2>&1
+    then
+        apt -y install sqlite3;
+    fi
+
+    if [ -f zuna.db ]; then
+        rm zuna.db;
+    fi
+
     sqlite3 zuna.db < up.sql;
     for f in examples/*.z1; do
         SQL=`lua zuna/sql.lua $f`;
