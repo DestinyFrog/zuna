@@ -1,8 +1,8 @@
 require "os"
 require "io"
 
-require "zuna.helpers.Functions"
-require "zuna.Block"
+require "zuna.helpers.functions"
+require "zuna.block"
 
 ---@type string
 local file_name = arg[1]

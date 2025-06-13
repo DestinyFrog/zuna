@@ -3,8 +3,8 @@ PATTERN_FOLDER = "patterns/"
 
 LOG_TABS = 0
 
-Z1_CSS = "zuna/z1.css"
-Z1_TEMP_SVG = "zuna/z1.temp.svg"
+Z1_CSS = "z1.css"
+Z1_TEMP_SVG = "z1.temp.svg"
 
 STANDARD_ATOM_RADIUS = 8
 STANDARD_DISTANCE_BETWEEN_LIGATIONS = 20

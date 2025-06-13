@@ -1,11 +1,8 @@
-local uuid = require "uuid"
-uuid.set_rng(uuid.rng.urandom())
+require "zuna.configuration"
+require "zuna.helpers.functions"
 
-require "zuna.Configuration"
-require "zuna.helpers.Functions"
-
-require "zuna.types.Atom"
-require "zuna.types.Ligation"
+require "zuna.types.atom"
+require "zuna.types.ligation"
 
 ---Handle line [@name ...]
 ---@param block Block
@@ -287,7 +284,7 @@ function Block:merge(newBlock, mask)
             end
         end
 
-        local id = uuid.v4()
+        local id = os.date("%x")
         self.ligations[id] = ligation
 
         ::continue::

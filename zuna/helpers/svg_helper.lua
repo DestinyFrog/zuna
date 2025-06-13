@@ -1,4 +1,4 @@
-require "zuna.Configuration"
+require "zuna.configuration"
 
 ---@class SvgHelper
 ---@field content string

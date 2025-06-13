@@ -1,4 +1,4 @@
-require "zuna.Configuration"
+require "zuna.configuration"
 
 ---Handle Zuna Erros
 ---@param status number
@@ -10,10 +10,12 @@ end
 ---Print as Log
 ---@param message string
 function Log(message)
+    --[[
     for i = 1, LOG_TABS do
         io.write('    ')
     end
     print(message)
+    ]]
 end
 
 function Split_string(txt, separator)

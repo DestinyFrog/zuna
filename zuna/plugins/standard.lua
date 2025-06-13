@@ -1,5 +1,5 @@
-require "zuna.Configuration"
-require "zuna.helpers.SvgHelper"
+require "zuna.configuration"
+require "zuna.helpers.svg_helper"
 
 ---@class Plugin
 ---@field block Block
