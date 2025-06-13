@@ -13,7 +13,7 @@ fi
 if [[ $1 = "dev" ]]; then
     while true; do
         clear;
-        lua zuna/Print.lua example.z1;
+        lua zuna/print.lua example.z1;
         sleep 0.5;
     done
 fi
